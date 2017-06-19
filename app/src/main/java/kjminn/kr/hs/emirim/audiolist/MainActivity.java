@@ -40,15 +40,18 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mediaPlayer.stop();
                 selectedMusiId=musicResIds[i];
+                progress.setVisibility(View.INVISIBLE);
             }
         });
 
         butPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaPlayer.create(MainActivity.this, selectedMusiId);
+                mediaPlayer=MediaPlayer.create(MainActivity.this, selectedMusiId);
                 mediaPlayer.start();
+                progress.setVisibility(View.VISIBLE);
             }
         });
 
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mediaPlayer.stop();
+                progress.setVisibility(View.INVISIBLE);
             }
         });
     }
