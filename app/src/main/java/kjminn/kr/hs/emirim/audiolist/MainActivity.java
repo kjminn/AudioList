@@ -13,13 +13,14 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     ListView list;
-    Button butPlay, butStop;
+    Button butPlay, butStop, butPause;
     TextView textMusic;
     ProgressBar progress;
     String[] musics={"Moves like jagger","Sunday morning","This love"};
     int[] musicResIds={R.raw.moves_like_jagger, R.raw.sunday_morning, R.raw.this_love};
     int selectedMusiId;
     MediaPlayer mediaPlayer;
+    boolean selectePauseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         list=(ListView)findViewById(R.id.list_music);
         butPlay=(Button)findViewById(R.id.but_play);
         butStop=(Button)findViewById(R.id.but_stop);
+        butPause=(Button)findViewById(R.id.but_pause);
         textMusic=(TextView)findViewById(R.id.text_music);
         progress=(ProgressBar)findViewById(R.id.progress_music);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, musics);
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectePauseButton=false;
                 mediaPlayer.stop();
                 selectedMusiId=musicResIds[i];
                 progress.setVisibility(View.INVISIBLE);
@@ -49,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
         butPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaPlayer=MediaPlayer.create(MainActivity.this, selectedMusiId);
+                if(selectePauseButton) {
+                    selectePauseButton=false;
+                }else
+                    mediaPlayer=MediaPlayer.create(MainActivity.this, selectedMusiId);
                 mediaPlayer.start();
                 progress.setVisibility(View.VISIBLE);
             }
@@ -58,7 +64,17 @@ public class MainActivity extends AppCompatActivity {
         butStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectePauseButton=false;
                 mediaPlayer.stop();
+                progress.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        butPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectePauseButton=true;
+                mediaPlayer.pause();
                 progress.setVisibility(View.INVISIBLE);
             }
         });
